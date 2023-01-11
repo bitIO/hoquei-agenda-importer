@@ -1,0 +1,7 @@
+{
+  "*": "cspell --no-summary --no-progress",
+  "*.md": "markdownlint --fix --ignore CHANGELOG.md",
+  "*.{js,jsx,ts,tsx,html,css}": ["prettier --write", "eslint --fix"],
+  "*.{png,jpeg,jpg,gif,svg}": "imagemin-lint-staged",
+  "*.scss": ["postcss --config path/to/your/config --replace", "stylelint"]
+}
