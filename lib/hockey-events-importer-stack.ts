@@ -18,7 +18,10 @@ export class HockeyEventsImporterStack extends Stack {
         minify: true,
       },
       entry: join(__dirname, '../lambdas/importer.ts'),
-      environment: {},
+      environment: {
+        REMOTE_SERVER:
+          'https://ns3104249.ip-54-37-85.eu/shared/portales_files/agenda_portales.php',
+      },
       functionName: 'events-importer',
       logRetention: RetentionDays.THREE_DAYS,
       runtime: Runtime.NODEJS_18_X,
