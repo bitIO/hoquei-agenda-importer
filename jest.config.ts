@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   collectCoverage: true,
   collectCoverageFrom: ['./lambdas/*.ts', './lambdas/*/*.ts', './lib/*.ts'],
   coverageThreshold: {
@@ -17,3 +19,5 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest',
   },
 };
+
+export default config;
