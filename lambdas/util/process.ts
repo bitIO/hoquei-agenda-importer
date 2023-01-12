@@ -15,6 +15,12 @@ type Match = {
   hour: string;
   venue: string;
 };
+type FMPData = {
+  competitions: Competition[];
+  matches: Match[];
+  teams: Team[];
+  venues: Venue[];
+};
 
 function getNodeText($: cheerio.CheerioAPI, element: cheerio.Element) {
   if (element.firstChild) {
@@ -68,7 +74,7 @@ function processMatchesTable($: cheerio.CheerioAPI, selector: string): Match[] {
   return matches;
 }
 
-function processHTML(html: string) {
+function processHTML(html: string): FMPData {
   const $ = cheerio.load(html);
 
   const competitions: Competition[] = processSelectOptions<Competition>(
@@ -88,4 +94,4 @@ function processHTML(html: string) {
   return { competitions, matches, teams, venues };
 }
 
-export { Competition, Team, Venue, Match, processHTML };
+export { Competition, FMPData, Team, Venue, Match, processHTML };
