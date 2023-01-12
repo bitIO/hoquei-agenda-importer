@@ -9,6 +9,7 @@ type Team = Record;
 type Venue = Record;
 type Match = {
   awayTeam: string;
+  category: string;
   date: string;
   homeTeam: string;
   hour: string;
@@ -17,7 +18,7 @@ type Match = {
 
 function getNodeText($: cheerio.CheerioAPI, element: cheerio.Element) {
   if (element.firstChild) {
-    const [textNode] = $(element.firstChild);
+    const textNode = element.children.find((child) => child.type === 'text');
     const textValue = $(textNode).text();
 
     return textValue;
@@ -51,9 +52,10 @@ function processMatchesTable($: cheerio.CheerioAPI, selector: string): Match[] {
   rows.each((index, element) => {
     if (index > 0) {
       const tds = $(element).find('td').toArray();
-      const [, , date, hour, , homeTeam, , awayTeam, , venue] = tds;
-      const matchData = {
+      const [, category, date, hour, , homeTeam, , awayTeam, , venue] = tds;
+      const matchData: Match = {
         awayTeam: getNodeText($, awayTeam),
+        category: getNodeText($, category.children[0] as cheerio.Element),
         date: getNodeText($, date),
         homeTeam: getNodeText($, homeTeam),
         hour: getNodeText($, hour),
@@ -86,4 +88,4 @@ function processHTML(html: string) {
   return { competitions, matches, teams, venues };
 }
 
-export { processHTML };
+export { Competition, Team, Venue, Match, processHTML };
