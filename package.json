@@ -10,7 +10,7 @@
     "cdk": "cdk",
     "cdk:deploy": "cdk deploy --all",
     "cdk:destroy": "cdk destroy --all",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "aws-cdk-lib": "2.59.0",
