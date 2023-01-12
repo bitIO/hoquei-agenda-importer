@@ -1,13 +1,30 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { processHTML } from '../lambdas/util/process';
+import { downloadHTML } from './util/download';
+import { findMatches } from './util/find-matches';
+import { FMPData, processHTML } from './util/process';
+
+describe('download', () => {
+  it('should download the html from the server', async () => {
+    const html = await downloadHTML(
+      'https://ns3104249.ip-54-37-85.eu/shared/portales_files/agenda_portales.php',
+      'fmp',
+      1,
+      21,
+    );
+    expect(html).toBeDefined();
+    expect(html?.length).toBeGreaterThan(100);
+  });
+});
 
 describe('process downloaded html', () => {
   let html = '';
 
   beforeEach(() => {
-    html = readFileSync(join(__dirname, './fakes/sample.html')).toString();
+    html = readFileSync(
+      join(__dirname, '../test/fakes/sample.html'),
+    ).toString();
   });
 
   it('should obtain all the clubs', () => {
@@ -55,5 +72,49 @@ describe('process downloaded html', () => {
     const { matches } = processHTML(html);
     expect(matches).toBeDefined();
     expect(matches.length).toBeGreaterThan(0);
+  });
+});
+
+describe('find matching entries', () => {
+  let html = '';
+  let htmlOutput: FMPData;
+
+  beforeEach(() => {
+    html = readFileSync(
+      join(__dirname, '../test/fakes/sample.html'),
+    ).toString();
+    htmlOutput = processHTML(html);
+  });
+
+  it('should find one match', () => {
+    const matches = findMatches(htmlOutput.matches, [
+      {
+        category: 'CTO AUT SUB - 15 FEMENINO',
+        team: 'CP RIVAS LAS LAGUNAS',
+      },
+    ]);
+    expect(matches).toBeDefined();
+    expect(matches.length).toEqual(1);
+    expect(matches[0].match).toBeDefined();
+    expect(matches[0].match?.homeTeam).toEqual('CP RIVAS LAS LAGUNAS');
+  });
+
+  it('should find two match', () => {
+    const matches = findMatches(htmlOutput.matches, [
+      {
+        category: 'CTO AUT SUB - 15 FEMENINO',
+        team: 'CP RIVAS LAS LAGUNAS',
+      },
+      {
+        category: 'CTO AUT JUNIOR',
+        team: 'CP ALCORCON',
+      },
+    ]);
+    expect(matches).toBeDefined();
+    expect(matches.length).toEqual(2);
+    expect(matches[0].match).toBeDefined();
+    expect(matches[0].match?.homeTeam).toEqual('CP RIVAS LAS LAGUNAS');
+    expect(matches[1].match).toBeDefined();
+    expect(matches[1].match?.awayTeam).toEqual('CP ALCORCON');
   });
 });

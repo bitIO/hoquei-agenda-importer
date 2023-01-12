@@ -9,7 +9,7 @@ module.exports = {
       statements: 90,
     },
   },
-  roots: ['<rootDir>/test'],
+  roots: ['<rootDir>/test', '<rootDir>/lambdas'],
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
   transform: {
