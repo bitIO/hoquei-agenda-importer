@@ -46,6 +46,18 @@ export class HockeyEventsImporterStack extends Stack {
     const bucket = new Bucket(this, 'HoqueiPersistenceS3', {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       bucketName: 'hoquei-importer-data',
+      lifecycleRules: [
+        {
+          // abortIncompleteMultipartUploadAfter: Duration.minutes(30),
+          expiration: Duration.days(30),
+          expiredObjectDeleteMarker: false,
+          // transitions: [
+          //   {
+          //     storageClass: StorageClass.INFREQUENT_ACCESS,
+          //   },
+          // ],
+        },
+      ],
       removalPolicy: RemovalPolicy.DESTROY,
       versioned: false,
     });
