@@ -4,6 +4,7 @@
   "bin": {
     "hockey-events-importer": "bin/hockey-events-importer.js"
   },
+  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
