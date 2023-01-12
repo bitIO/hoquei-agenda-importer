@@ -1,8 +1,8 @@
 import { ScheduledEvent } from 'aws-lambda';
-import { S3 } from 'aws-sdk';
 
 import { downloadHTML } from './util/download';
 import { processHTML } from './util/process';
+import { fileExists, fileRead, fileSave, generateKey } from './util/s3';
 
 async function handler(event: ScheduledEvent) {
   console.log('request:', JSON.stringify(event, undefined, 2));
@@ -30,29 +30,29 @@ async function handler(event: ScheduledEvent) {
       throw new Error('Invalid configuration. No BUCKET_NAME defined');
     }
 
-    console.log('Downloading html from', process.env.URL);
-    const html = await downloadHTML(
-      process.env.URL,
-      process.env.CLIENT,
-      Number(process.env.IDM),
-      Number(process.env.TEMP_ID),
-    );
-    if (!html) {
-      throw new Error('Cannot obtain data from url');
+    let data: FMPData;
+
+    const key = generateKey();
+    const fileAlreadyCreated = await fileExists(process.env.BUCKET_NAME, key);
+    if (!fileAlreadyCreated) {
+      console.log('Downloading html from', process.env.URL);
+      const html = await downloadHTML(
+        process.env.URL,
+        process.env.CLIENT,
+        Number(process.env.IDM),
+        Number(process.env.TEMP_ID),
+      );
+      if (!html) {
+        throw new Error('Cannot obtain data from url');
+      }
+
+      console.log('Processing HTML', html.length);
+      data = processHTML(html);
+      console.log('Saving to S3', process.env.BUCKET_NAME);
+      await fileSave(process.env.BUCKET_NAME, key, data);
+    } else {
+      data = await fileRead(process.env.BUCKET_NAME, key);
     }
-
-    console.log('Processing HTML', html.length);
-    const data = processHTML(html);
-
-    console.log('Saving to S3', process.env.BUCKET_NAME);
-    const s3Client = new S3();
-    await s3Client
-      .putObject({
-        Body: JSON.stringify(data),
-        Bucket: process.env.BUCKET_NAME,
-        Key: `${new Date()}.json`,
-      })
-      .promise();
 
     console.log('All done!');
 
