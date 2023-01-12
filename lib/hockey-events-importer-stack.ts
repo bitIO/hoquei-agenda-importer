@@ -19,8 +19,10 @@ export class HockeyEventsImporterStack extends Stack {
       },
       entry: join(__dirname, '../lambdas/importer.ts'),
       environment: {
-        REMOTE_SERVER:
-          'https://ns3104249.ip-54-37-85.eu/shared/portales_files/agenda_portales.php',
+        CLIENT: 'fmp',
+        IDM: '1',
+        TEMP_ID: '21',
+        URL: 'https://ns3104249.ip-54-37-85.eu/shared/portales_files/agenda_portales.php',
       },
       functionName: 'events-importer',
       logRetention: RetentionDays.THREE_DAYS,
