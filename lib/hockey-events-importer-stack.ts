@@ -31,7 +31,7 @@ export class HockeyEventsImporterStack extends Stack {
         },
         functionName: 'hoquei-events-importer',
         logRetention: RetentionDays.THREE_DAYS,
-        runtime: Runtime.NODEJS_18_X,
+        runtime: Runtime.NODEJS_16_X,
         timeout: Duration.seconds(60),
       },
     );
