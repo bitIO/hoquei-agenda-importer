@@ -10,6 +10,7 @@ module.exports = {
     },
   },
   roots: ['<rootDir>/test', '<rootDir>/lambdas'],
+  setupFiles: ['dotenv/config'],
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
   transform: {

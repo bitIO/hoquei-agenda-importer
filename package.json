@@ -33,6 +33,7 @@
     "aws-cdk": "2.59.0",
     "aws-lambda": "1.0.7",
     "cspell": "6.18.1",
+    "dotenv": "16.0.3",
     "esbuild": "0.16.16",
     "eslint": "8.31.0",
     "eslint-config-prettier": "8.6.0",
