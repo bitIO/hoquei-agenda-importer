@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.59.0",
+    "aws-sdk": "2.1294.0",
     "axios": "1.2.2",
     "cheerio": "1.0.0-rc.12",
     "constructs": "10.0.0"

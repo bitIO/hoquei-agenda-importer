@@ -1,4 +1,5 @@
 import { ScheduledEvent } from 'aws-lambda';
+import { S3 } from 'aws-sdk';
 
 import { downloadHTML } from './util/download';
 import { processHTML } from './util/process';
@@ -25,7 +26,11 @@ async function handler(event: ScheduledEvent) {
     if (isNaN(Number(process.env.TEMP_ID))) {
       throw new Error('Invalid configuration. TEMP_ID is not a number');
     }
+    if (!process.env.BUCKET_NAME) {
+      throw new Error('Invalid configuration. No BUCKET_NAME defined');
+    }
 
+    console.log('Downloading html from', process.env.URL);
     const html = await downloadHTML(
       process.env.URL,
       process.env.CLIENT,
@@ -36,7 +41,20 @@ async function handler(event: ScheduledEvent) {
       throw new Error('Cannot obtain data from url');
     }
 
+    console.log('Processing HTML', html.length);
     const data = processHTML(html);
+
+    console.log('Saving to S3', process.env.BUCKET_NAME);
+    const s3Client = new S3();
+    await s3Client
+      .putObject({
+        Body: JSON.stringify(data),
+        Bucket: process.env.BUCKET_NAME,
+        Key: `${new Date()}.json`,
+      })
+      .promise();
+
+    console.log('All done!');
 
     return {
       body: JSON.stringify(data),
