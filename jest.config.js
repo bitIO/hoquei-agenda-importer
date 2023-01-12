@@ -1,6 +1,6 @@
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: ['./lambdas/*.ts', './lib/*.ts'],
+  collectCoverageFrom: ['./lambdas/*.ts', './lambdas/*/*.ts', './lib/*.ts'],
   coverageThreshold: {
     global: {
       branches: 90,

@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { processHTML } from '../lambdas/process';
+import { processHTML } from '../lambdas/util/process';
 
 describe('process downloaded html', () => {
   let html = '';

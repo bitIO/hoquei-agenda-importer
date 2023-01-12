@@ -1,4 +1,4 @@
-import { downloadHTML } from '../lambdas/download';
+import { downloadHTML } from '../lambdas/util/download';
 
 describe('download matches', () => {
   it('should download the html from the server', async () => {
