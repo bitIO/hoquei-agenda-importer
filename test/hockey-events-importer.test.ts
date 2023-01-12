@@ -22,5 +22,14 @@ test('Lambda and scheduled event are created', () => {
     Name: 'hoqueiImporterCron',
     ScheduleExpression: 'cron(0 18 ? * 3 *)',
   });
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    BucketName: 'hoquei-importer-data',
+    PublicAccessBlockConfiguration: {
+      BlockPublicAcls: true,
+      BlockPublicPolicy: true,
+      IgnorePublicAcls: true,
+      RestrictPublicBuckets: true,
+    },
+  });
 });
 /* eslint-enable jest/expect-expect */

@@ -1,11 +1,12 @@
 import { join } from 'path';
 
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { Rule, Schedule } from 'aws-cdk-lib/aws-events';
 import { LambdaFunction } from 'aws-cdk-lib/aws-events-targets';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
 export class HockeyEventsImporterStack extends Stack {
@@ -22,6 +23,7 @@ export class HockeyEventsImporterStack extends Stack {
         },
         entry: join(__dirname, '../lambdas/importer.ts'),
         environment: {
+          BUCKET_NAME: 'hoquei-importer-data',
           CLIENT: 'fmp',
           IDM: '1',
           TEMP_ID: '21',
@@ -40,5 +42,13 @@ export class HockeyEventsImporterStack extends Stack {
       schedule: Schedule.expression('cron(0 18 ? * 3 *)'),
     });
     rule.addTarget(new LambdaFunction(lambdaImporter));
+
+    const bucket = new Bucket(this, 'HoqueiPersistenceS3', {
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      bucketName: 'hoquei-importer-data',
+      removalPolicy: RemovalPolicy.DESTROY,
+      versioned: false,
+    });
+    bucket.grantReadWrite(lambdaImporter);
   }
 }
