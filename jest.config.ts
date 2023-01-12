@@ -1,6 +1,6 @@
 import type { Config } from 'jest';
 
-const config: Config = {
+const configuration: Config = {
   collectCoverage: true,
   collectCoverageFrom: ['./lambdas/*.ts', './lambdas/*/*.ts', './lib/*.ts'],
   coverageThreshold: {
@@ -20,4 +20,4 @@ const config: Config = {
   },
 };
 
-export default config;
+export default configuration;

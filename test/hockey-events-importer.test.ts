@@ -15,11 +15,11 @@ test('Lambda and scheduled event are created', () => {
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties('AWS::Lambda::Function', {
-    FunctionName: 'events-importer',
+    FunctionName: 'hoquei-events-importer',
     Runtime: 'nodejs18.x',
   });
   template.hasResourceProperties('AWS::Events::Rule', {
-    Name: 'hockeyMatchesImportCron',
+    Name: 'hoqueiImporterCron',
     ScheduleExpression: 'cron(0 18 ? * 3 *)',
   });
 });

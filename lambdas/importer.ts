@@ -3,7 +3,7 @@ import { ScheduledEvent } from 'aws-lambda';
 import { downloadHTML } from './util/download';
 import { processHTML } from './util/process';
 
-exports.handler = async function (event: ScheduledEvent) {
+async function handler(event: ScheduledEvent) {
   console.log('request:', JSON.stringify(event, undefined, 2));
 
   try {
@@ -50,4 +50,6 @@ exports.handler = async function (event: ScheduledEvent) {
       statusCode: 500,
     };
   }
-};
+}
+
+export { handler };
